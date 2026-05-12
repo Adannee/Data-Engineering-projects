@@ -1,0 +1,66 @@
+name: dbt CI Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  dbt-test:
+    name: Run dbt Tests
+    runs-on: ubuntu-latest
+
+    env:
+      DBT_SNOWFLAKE_ACCOUNT: ${{ secrets.DBT_SNOWFLAKE_ACCOUNT }}
+      DBT_SNOWFLAKE_USER: ${{ secrets.DBT_SNOWFLAKE_USER }}
+      DBT_SNOWFLAKE_PASSWORD: ${{ secrets.DBT_SNOWFLAKE_PASSWORD }}
+      DBT_SNOWFLAKE_ROLE: ${{ secrets.DBT_SNOWFLAKE_ROLE }}
+      DBT_SNOWFLAKE_DATABASE: ${{ secrets.DBT_SNOWFLAKE_DATABASE }}
+      DBT_SNOWFLAKE_WAREHOUSE: ${{ secrets.DBT_SNOWFLAKE_WAREHOUSE }}
+      DBT_SNOWFLAKE_SCHEMA: ${{ secrets.DBT_SNOWFLAKE_SCHEMA }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dbt Snowflake
+        run: pip install dbt-snowflake
+
+      - name: Create dbt profiles.yml
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml << EOF
+          ecommerce_analytics:
+            target: dev
+            outputs:
+              dev:
+                type: snowflake
+                account: ${{ secrets.DBT_SNOWFLAKE_ACCOUNT }}
+                user: ${{ secrets.DBT_SNOWFLAKE_USER }}
+                password: ${{ secrets.DBT_SNOWFLAKE_PASSWORD }}
+                role: ${{ secrets.DBT_SNOWFLAKE_ROLE }}
+                database: ${{ secrets.DBT_SNOWFLAKE_DATABASE }}
+                warehouse: ${{ secrets.DBT_SNOWFLAKE_WAREHOUSE }}
+                schema: ${{ secrets.DBT_SNOWFLAKE_SCHEMA }}
+                threads: 4
+          EOF
+
+      - name: dbt debug
+        run: dbt debug
+
+      - name: dbt deps
+        run: dbt deps
+
+      - name: dbt build
+        run: dbt build --select staging
+
+      - name: dbt test
+        run: dbt test --select staging
