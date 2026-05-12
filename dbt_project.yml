@@ -44,3 +44,29 @@ models:
         +schema: MARTS
         +materialized: table
         +database: MARKETING_DB
+    fintech:
+      staging:
+        +schema: STAGING
+        +materialized: view
+        +database: FINTECH_DB
+      intermediate:
+        +schema: INTERMEDIATE
+        +materialized: view
+        +database: FINTECH_DB
+      marts:
+        +schema: MARTS
+        +materialized: table
+        +database: FINTECH_DB
+    supplychain:
+      staging:
+        +schema: STAGING
+        +materialized: view
+        +database: SUPPLYCHAIN_DB
+      intermediate:
+        +schema: INTERMEDIATE
+        +materialized: view
+        +database: SUPPLYCHAIN_DB
+      marts:
+        +schema: MARTS
+        +materialized: table
+        +database: SUPPLYCHAIN_DB      

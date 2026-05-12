@@ -1,29 +1,31 @@
 version: 2
 
 models:
-  - name: fct_order
+  - name: fct_transactions
     columns:
-      - name: order_id
+      - name: transaction_id
         tests:
           - unique
           - not_null
-      - name: customer_id
+      - name: account_id
         tests:
           - not_null
-      - name: order_status
+      - name: transaction_date
         tests:
           - not_null
-
-  - name: fct_product_performance
+  
+  - name: dim_accounts
     columns:
-      - name: product_id
+      - name: account_id
         tests:
           - unique
           - not_null
-
-  - name: dim_customers
+  
+  - name: dim_merchants
     columns:
-      - name: customer_unique_id
+      - name: merchant_id
         tests:
           - unique
           - not_null
+          
+          

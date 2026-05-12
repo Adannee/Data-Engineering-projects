@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: fintech_raw
+    database: FINTECH_DB
+    schema: RAW
+    tables:
+      - name: TRANSACTIONS

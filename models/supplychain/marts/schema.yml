@@ -1,29 +1,29 @@
 version: 2
 
 models:
-  - name: fct_order
+  - name: fct_sc_orders
     columns:
-      - name: order_id
+      - name: order_item_id
         tests:
           - unique
           - not_null
-      - name: customer_id
+      - name: order_id
         tests:
           - not_null
-      - name: order_status
+      - name: order_date
         tests:
           - not_null
 
-  - name: fct_product_performance
+  - name: dim_sc_products
     columns:
       - name: product_id
         tests:
           - unique
           - not_null
 
-  - name: dim_customers
+  - name: dim_sc_customers
     columns:
-      - name: customer_unique_id
+      - name: customer_id
         tests:
           - unique
           - not_null
